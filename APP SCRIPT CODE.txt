@@ -1,0 +1,62 @@
+
+Here's how to use your Google Apps Script code and deploy it to enable data logging in Google Sheets for your ESP32 project.
+
+Instructions for Google Apps Script Setup and Deployment
+1)Open Google Sheets:
+
+Create or open a Google Sheet where you want to log the data.
+Rename a sheet to  match your sheet's actual name. 
+
+2)Open the Script Editor:
+
+In the Google Sheets menu, go to Extensions > Apps Script to open the script editor.
+
+3)Enter the Code:
+
+Copy and paste your Apps Script code into the script editor:
+
+
+
+function doGet(e) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(" "); // Replace with your sheet name
+  const id = e.parameter.value1;
+  const name = e.parameter.value2;
+
+  if (id && name) {
+    sheet.appendRow([new Date(), id, name]);
+    return ContentService.createTextOutput("Data received");
+  } else {
+    return ContentService.createTextOutput("Missing parameters");
+  }
+}
+
+
+
+4)Save the Script:
+
+Save the script with a descriptive name like "ESP32 Biometric Data Logger".
+
+5)Deploy the Script as a Web App:
+
+Go to Deploy > Test deployments (or Deploy > Manage deployments in older versions).
+Select Deploy as web app.
+Set access permissions:
+Under Execute as, choose Me.
+Under Who has access, select Anyone or Anyone with the link to allow external access.
+Click Deploy to publish the web app.
+
+6)Copy the Web App URL:
+
+Once deployed, copy the URL displayed after deployment. It will look something like this:
+
+	https://script.google.com/macros/s/your_script_id/exec
+
+This URL will be used in your ESP32 code as the base URL for sending data to Google Sheets. Replace "your_script_id" with this URL in the GAS_ID variable in your ESP32 code.
+
+7)Testing and Usage:
+
+Ensure your ESP32 code sends data in the format /exec?value1=ID&value2=NAME, where ID and NAME are dynamically updated with fingerprint information.
+Test by running your ESP32 project to confirm that data is logged to your Google Sheet each time a fingerprint is recognized.
+
+
+With these steps, your Google Apps Script should be set up and ready to log incoming data from your ESP32 project directly into Google Sheets. Make sure you’ve updated GAS_ID in your ESP32 code with the correct URL to enable seamless communication between your ESP32 and Google Sheets.
